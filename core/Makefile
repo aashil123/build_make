@@ -5074,9 +5074,17 @@ $(INTERNAL_OTA_PACKAGE_TARGET): \
 		$(if $(SIGNING_KEYS), $(BUILT_TARGET_FILES_PACKAGE_SIGNED), $(BUILT_TARGET_FILES_PACKAGE)) \
 		$(OTA_FROM_TARGET_FILES)
 	@echo "Package OTA: $@"
-	$(call build-ota-package-target,$@,-k $(if $(SIGNING_KEYS), $(SIGNING_KEYS)/releasekey, $(KEY_CERT_PAIR)) --output_metadata_path $(INTERNAL_OTA_METADATA))
+	$(call build-ota-package-target,$@,-k $(if $(SIGNING_KEYS), $(SIGNING_KEYS)/releasekey, $(KEY_CERT_PAIR)) --backup=$(backuptool) --output_metadata_path $(INTERNAL_OTA_METADATA))
 
-.PHONY: otapackage
+ifeq ($(WITH_GMS),true)
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
+else
+ifneq ($(CORVUS_BUILD),)
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := true
+else
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
+endif
+endif.PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 
 ifeq ($(BOARD_BUILD_RETROFIT_DYNAMIC_PARTITIONS_OTA_PACKAGE),true)
