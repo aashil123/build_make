@@ -5084,6 +5084,7 @@ ifneq ($(CORVUS_BUILD),)
 else
     $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
 endif
+
 endif.PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 
@@ -5743,3 +5744,4 @@ $(call dist-for-goals,haiku,$(SOONG_FUZZ_PACKAGING_ARCH_MODULES))
 # -----------------------------------------------------------------
 # The makefile for haiku line coverage.
 include $(BUILD_SYSTEM)/line_coverage.mk
+endif
